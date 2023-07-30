@@ -39,11 +39,12 @@ const position_example = {
   ],
 };
 
-const url = "https://forward-reverse-geocoding.p.rapidapi.com/v1/search";
+const geoForwardUrl =
+  "https://forward-reverse-geocoding.p.rapidapi.com/v1/search";
 
-export async function geocoding(loc: string) {
+export async function geocodingForward(loc: string) {
   const response = await fetch(
-    `${url}?q=${loc}&limit=1&accept-language=en&polygon_threshold=0.0`,
+    `${geoForwardUrl}?q=${loc}&limit=1&accept-language=en&polygon_threshold=0.0`,
     {
       method: "GET",
       headers: {
@@ -55,12 +56,12 @@ export async function geocoding(loc: string) {
       },
     }
   );
-  const result = (await response.json()) as typeof geocoding_example;
+  const result = (await response.json()) as typeof geocoding_forward_example;
 
   return result[0];
 }
 
-const geocoding_example = [
+const geocoding_forward_example = [
   {
     importance: 0.211,
     licence:
@@ -77,3 +78,44 @@ const geocoding_example = [
     type: "guest_house",
   },
 ];
+
+const geoReverseUrl =
+  "https://forward-reverse-geocoding.p.rapidapi.com/v1/reverse";
+
+export async function geocodingReverse(lat: string, lon: string) {
+  const response = await fetch(
+    `${geoReverseUrl}?lat=${lat}&lon=${lon}&accept-language=en&polygon_threshold=0.0&limit=1'`,
+    {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": env.RAPID_API_KEY,
+        "X-RapidAPI-Host": "forward-reverse-geocoding.p.rapidapi.com",
+      },
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+  const result = (await response.json()) as typeof geocoding_reverse_example;
+
+  return result;
+}
+
+const geocoding_reverse_example = {
+  licence:
+    "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+  osm_id: 122604,
+  address: {
+    state: "Illinois",
+    country: "United States",
+    city: "Chicago",
+    country_code: "us",
+    county: "Cook County",
+  },
+  osm_type: "relation",
+  boundingbox: ["41.644531", "42.0230396", "-87.940101", "-87.5240812"],
+  place_id: 284897611,
+  lat: "41.8755616",
+  lon: "-87.6244212",
+  display_name: "Chicago, Cook County, Illinois, United States",
+};

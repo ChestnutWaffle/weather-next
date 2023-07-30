@@ -24,7 +24,7 @@ export default async function Details({
   const { date, time } = getDateNTime(timezone);
 
   return (
-    <section className="pt-12 pb-8 px-12 text-gray-300">
+    <section className="py-4 px-6 md:px-12 text-gray-300">
       <div className="flex flex-col md:flex-row gap-8 justify-center rounded-xl">
         <InputCard date={date} timezone={timezone} time_={time} />
         <div className="p-4 rounded-xl shadow-lg shadow-purple-600/30 flex-grow bg-purple-700 flex flex-col sm:flex-row justify-evenly">

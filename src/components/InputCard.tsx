@@ -62,7 +62,7 @@ export function InputCard({ timezone, date, time_ }: Props) {
           />
           <button
             type="submit"
-            className="absolute right-0 h-full rounded-lg p-2 active:text-purple-500"
+            className="absolute right-0 h-full rounded-lg p-2 active:text-purple-500 focus:outline-none focus:text-purple-500 focus:bg-gray-600/70"
           >
             <SearchIcon className="h-6 w-6" />
           </button>
