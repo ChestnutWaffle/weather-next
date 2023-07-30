@@ -52,7 +52,11 @@ export function InputCard({ timezone, date, time_ }: Props) {
       </div>
       <form className="relative" action={submitForm}>
         <div className="group">
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
           <input
+            id="search"
             autoComplete="off"
             className="w-full bg-transparent py-2 px-4 pr-10 border-2 border-purple-500 rounded-lg focus:outline-none focus:outline-purple-500"
             type="text"
@@ -61,6 +65,8 @@ export function InputCard({ timezone, date, time_ }: Props) {
             value={input}
           />
           <button
+            id="search-button"
+            aria-label="Search Button"
             type="submit"
             className="absolute right-0 h-full rounded-lg p-2 active:text-purple-500 focus:outline-none focus:text-purple-500 focus:bg-gray-600/70"
           >
