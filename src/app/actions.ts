@@ -1,5 +1,4 @@
 "use server";
-import remove_accents from "remove-accents";
 import { cookies } from "next/dist/client/components/headers";
 import { COOKIES_KEYS } from "@/utils/cookie";
 
@@ -19,14 +18,17 @@ export async function cityAction(city: {
   lat: string;
   lon: string;
 }) {
-  const location = remove_accents(`${city.name} ${city.country}`);
-
   if (!!city) {
     cookies().delete(COOKIES_KEYS.JUST_LOCATION);
     cookies().delete(COOKIES_KEYS.CURRENT_LOCATION);
     cookies().set(
       COOKIES_KEYS.LAT_LON,
-      JSON.stringify({ lat: city.lat, lon: city.lon, location })
+      JSON.stringify({
+        lat: city.lat,
+        lon: city.lon,
+        name: city.name,
+        country: city.country,
+      })
     );
   }
 }

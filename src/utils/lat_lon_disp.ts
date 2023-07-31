@@ -17,16 +17,16 @@ export async function getLatLonDisplayName() {
 
   if (!!lat_lon_cookie?.value.toString()) {
     const lat_lon = JSON.parse(lat_lon_cookie.value.toString()) as {
-      location: string;
+      country: string;
+      name: string;
       lat: string;
       lon: string;
     };
 
     lat = lat_lon.lat;
     lon = lat_lon.lon;
-    display_name = lat_lon.location;
+    display_name = `${lat_lon.name}, ${lat_lon.country}`;
   } else if (!!just_location_cookie?.value.toString()) {
-    // console.log(just_location_cookie?.value.toString());
     const geocoding_result = await geocodingForward(
       just_location_cookie
         ? just_location_cookie.value.toString()
