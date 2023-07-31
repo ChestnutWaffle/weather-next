@@ -10,7 +10,7 @@ type City = {
 };
 
 export function getCitySuggestion(city_input: string): City[] {
-  const db = new Database("src/utils/db/cities.db");
+  const db = new Database("cities.db");
   db.pragma("journal_mode = WAL");
 
   const rows = db
