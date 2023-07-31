@@ -1,6 +1,5 @@
 "use server";
 import remove_accents from "remove-accents";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/dist/client/components/headers";
 import { COOKIES_KEYS } from "@/utils/cookie";
 
