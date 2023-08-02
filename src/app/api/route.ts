@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const compare_string = `%${loc.toLowerCase()}%`;
 
   const { rows } =
-    await sql`SELECT * FROM cities WHERE compare LIKE ${compare_string} LIMIT 10;`;
+    await sql`SELECT name, country, lat, lon FROM cities WHERE compare LIKE ${compare_string} LIMIT 10;`;
 
   const results = rows.map((row) => {
     return {
