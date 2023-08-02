@@ -1,7 +1,5 @@
-import { cities } from "@/utils/cities";
-import { countries } from "@/utils/countries";
+import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
-import remove_accents from "remove-accents";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,20 +7,19 @@ export async function GET(request: Request) {
 
   if (!loc) return [];
 
-  const results = cities
-    .filter((city) => {
-      const cleaned = remove_accents(city.name);
+  const compare_string = `%${loc.toLowerCase()}%`;
 
-      return cleaned.toLowerCase().includes(loc.toLowerCase());
-    })
-    .map((city) => ({
-      name: city.name,
-      // @ts-ignore
-      country: countries[city.country] ?? "",
-      lat: city.lat,
-      lon: city.lng,
-    }))
-    .slice(0, 10);
+  const { rows } =
+    await sql`SELECT * FROM cities WHERE compare LIKE ${compare_string} LIMIT 10;`;
+
+  const results = rows.map((row) => {
+    return {
+      name: row.name,
+      country: row.country,
+      lat: row.lat,
+      lon: row.lon,
+    };
+  });
 
   return NextResponse.json(results);
 }

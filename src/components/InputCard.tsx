@@ -4,6 +4,7 @@ import { cityAction, submitForm } from "@/app/actions";
 import { SearchIcon } from "./Icons";
 import { useEffect, useState } from "react";
 import { getDateNTime } from "@/utils";
+import { useDebounce } from "./hooks/useDebounce";
 
 interface Props {
   timezone: string;
@@ -25,6 +26,10 @@ export function InputCard({ timezone, date, time_ }: Props) {
 
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
+  const debouncedInput = useDebounce(input, 300);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const timeInterval = setTimeout(() => {
       const { time } = getDateNTime(timezone);
@@ -36,13 +41,18 @@ export function InputCard({ timezone, date, time_ }: Props) {
   });
 
   useEffect(() => {
-    if (input.length < 3) return;
+    async function fetchSuggestions(debouncedInput: string) {
+      if (debouncedInput.length < 3) return;
 
-    fetch(`/api?loc=${input}`)
-      .then((response) => response.json())
-      .then((results: SearchResult[]) => setSearchResults(results))
-      .catch((e) => console.log(e));
-  }, [input]);
+      setIsLoading(true);
+      const response = await fetch(`/api?loc=${debouncedInput}`);
+      const results = (await response.json()) as SearchResult[];
+      setSearchResults(results);
+      setIsLoading(false);
+    }
+
+    fetchSuggestions(debouncedInput);
+  }, [debouncedInput]);
 
   return (
     <div className="p-4 rounded-xl shadow-lg flex-grow md:min-w-[45%] bg-gray-700 flex flex-col gap-6 max-w-2xl">
@@ -72,21 +82,24 @@ export function InputCard({ timezone, date, time_ }: Props) {
           >
             <SearchIcon className="h-6 w-6" />
           </button>
-          {input.length < 3 ||
-            (searchResults.length !== 0 && (
-              <div className="absolute top-full invisible group-focus-within:visible flex flex-col gap-1 rounded-xl mt-2 z-20 bg-gray-800 p-2  w-full shadow-xl shadow-gray-800 outline outline-2 outline-gray-700 max-h-56 lg:max-h-48 overflow-y-auto">
-                {searchResults.map((city, index) => (
-                  <button
-                    formAction={() => cityAction(city)}
-                    key={index}
-                    className="px-6 py-2 flex flex-col bg-gray-700 rounded-xl"
-                  >
-                    <span>{city.name}</span>
-                    <span>{city.country}</span>
-                  </button>
-                ))}
-              </div>
-            ))}
+          {debouncedInput.length >= 3 && (
+            <div className="absolute top-full invisible group-focus-within:visible flex flex-col gap-1 rounded-xl mt-2 z-20 bg-gray-800 p-2  w-full shadow-xl shadow-gray-800 outline outline-2 outline-gray-700 max-h-56 lg:max-h-48 overflow-y-auto">
+              {isLoading
+                ? "Loading"
+                : searchResults.length !== 0
+                ? searchResults.map((city, index) => (
+                    <button
+                      formAction={() => cityAction(city)}
+                      key={index}
+                      className="px-6 py-2 flex flex-col bg-gray-700 rounded-xl"
+                    >
+                      <span>{city.name}</span>
+                      <span>{city.country}</span>
+                    </button>
+                  ))
+                : "None"}
+            </div>
+          )}
         </div>
       </form>
     </div>

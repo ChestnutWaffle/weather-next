@@ -12,6 +12,7 @@
     "@types/node": "20.4.4",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
+    "@vercel/postgres": "^0.4.1",
     "autoprefixer": "10.4.14",
     "better-sqlite3": "^8.5.0",
     "cities.json": "^1.1.22",
